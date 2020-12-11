@@ -1,12 +1,20 @@
 { ... }: # ignore arguments
 
 with import ../library.nix {
-  default_vtr_rev = "b4f390a7d9ae9a566944a5dbb8d89cd2498a79f1";
+  default_vtr_rev = "";
   pkgs = import <nixpkgs> {}; # import default.nix, passing in nixpkgs
 };
 
 let
-  regression_tests = make_regression_tests {};
+  vtr_hackerfoo_ri = vtrDerivation {
+    variant = "vtr_hackerfoo_ri";
+    url = "https://github.com/HackerFoo/vtr-verilog-to-routing.git";
+    ref = "dont_add_nonconfig_congestion";
+    rev = "392b973db050028af49f6e5a00b72a8b60ef5264";
+  };
+  regression_tests = make_regression_tests {
+    vtr = vtr_hackerfoo_ri;
+  };
 in
 
 # each attribute is a job
